@@ -71,6 +71,8 @@ public class RootLoginServlet extends HttpServlet {
 				response.sendRedirect("IndexServlet"); //跳转
 			}else{
 				out1.print("登录失败");
+				out1.println("两秒后回到登录窗口");
+				response.setHeader("refresh","2;URL=root_login.jsp") ;
 			}
 		} catch (Exception e) {
 			// TODO: handle exception

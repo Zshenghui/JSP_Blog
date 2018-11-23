@@ -1,6 +1,9 @@
 package user;
+import java.io.PrintWriter;
 import java.sql.Connection; 
 import java.sql.PreparedStatement; 
+import java.sql.ResultSet;
+
 import dbcon.sqlConnection; 
 import user.UserInfomation;
 
@@ -14,8 +17,29 @@ public class visitorreg {
 	return instance;
 	}
 	
+	public boolean checkVisitor_reg(UserInfomation user){
+		boolean flag=false;
+		Connection conn=null;
+		try{
+			conn=sqlConnection.getCon();
+			String sql="select from bk_visitor where visitorid=?";
+			PreparedStatement ps=conn.prepareStatement(sql);
+			ps.setString(1, user.getUserid());
+			ResultSet rs=ps.executeQuery();
+			if(rs.next()){
+				flag = false;
+			}
+			else{
+				flag = true;
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return flag;
+	}
 	//保存游客注册信息
 	public boolean saveVisitor(UserInfomation user){
+		boolean flag = false;
 		Connection conn=null;
 		try{
 			conn = sqlConnection.getCon();
@@ -25,10 +49,10 @@ public class visitorreg {
 			ps.setString(2, user.getUserpwd());
 			ps.setString(3, user.getUsername());
 			ps.executeUpdate();
-			return true;
+			flag = true;
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-	return false;
+	return flag;
 	}
 }

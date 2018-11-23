@@ -44,10 +44,14 @@ public class VisitorServlet extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		//登录验证
 		if(visitorid == null || "".equals(visitorid)){    
-			out.print("用户id不能为空");
+			out.println("用户id不能为空");
+			out.println("两秒后回到登录窗口");
+			response.setHeader("refresh","2;URL=visitor_login.jsp") ;
 		}
-		if(visitorpwd == null || "".equals(visitorpwd)){
+		else if(visitorpwd == null || "".equals(visitorpwd)){
 			out.print("密码不能为空");
+			out.println("两秒后回到登录窗口");
+			response.setHeader("refresh","2;URL=visitor_login.jsp") ;
 		}
 		
 		//用户名密码验证通过
@@ -75,8 +79,9 @@ public class VisitorServlet extends HttpServlet {
 		        request.getSession().setAttribute("userid", visitor.getUserid());//向会话对象写入数据
 		        response.sendRedirect("IndexServlet"); //跳转
 			}else{
-				out.print("登录失败");
-				response.sendRedirect("visitor_login.jsp");
+				out.println("登录失败");
+				out.println("两秒后回到登录窗口");
+				response.setHeader("refresh","2;URL=visitor_login.jsp") ;
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -107,26 +112,51 @@ public class VisitorServlet extends HttpServlet {
 		//表单提交值
 		String visitorid = request.getParameter("visitorid");
 		String visitorpwd = request.getParameter("visitorpwd");
+		String revisitorpwd = request.getParameter("revisitorpwd");
 		String visitorname = request.getParameter("visitorname");
-		
+		System.out.println(visitorid);
+		System.out.println(visitorpwd);
+		System.out.println(revisitorpwd);
+		System.out.println(visitorname);
 		//将获取的表单值封装到用户信息对象中
-		
-		UserInfomation visitor = new UserInfomation();
-		visitor.setUserid(visitorid);
-		visitor.setUserpwd(visitorpwd);
-		visitor.setUsername(visitorname);
-		boolean flag = visitorreg.getinstance().saveVisitor(visitor);	//将游客注册信息保存到数据库
+		boolean flag=false;
 		PrintWriter out = response.getWriter();
-		//注册结果
-		if(flag){
-			out.println("注册成功");
-			response.setHeader("refresh","2;URL=visitor_login.jsp") ;
-			out.println("两秒后自动跳转到游客登录界面！！！");
+		if(visitorid == null || "".equals(visitorid)){    
+			out.println("用户id不能为空");
+		}
+		else if(visitorpwd == null || "".equals(visitorpwd)){
+			out.println("密码不能为空");
+		}
+		else if(revisitorpwd == null || "".equals(revisitorpwd)){
+			out.println("确认密码不能为空");
+		}
+		else if(!visitorpwd.equals(revisitorpwd)){
+			out.println("两次输入的密码不一致");
 		}
 		else{
-			out.println("注册失败");
-			response.setHeader("refresh","2;URL=index.jsp") ;
-			out.println("两秒后自动跳转到首页！！！");
+			UserInfomation visitor = new UserInfomation();
+			visitor.setUserid(visitorid);
+			visitor.setUserpwd(visitorpwd);
+			visitor.setUsername(visitorname);
+			flag = visitorreg.getinstance().checkVisitor_reg(visitor);	//将游客注册信息保存到数据库
+			if(!flag){
+				out.print("用户名已存在，注册失败<br>");
+				response.setHeader("refresh","2;URL=visitor_reg.jsp") ;
+				out.println("两秒后自动跳转到游客注册界面！！！");
+			}
+			else{
+				flag = visitorreg.getinstance().saveVisitor(visitor);
+				if(flag){
+					out.println("注册成功<br>");
+					response.setHeader("refresh","2;URL=visitor_login.jsp") ;
+					out.println("两秒后自动跳转到游客登录界面！！！");
+				}
+				else{
+					out.println("注册失败<br>");
+					response.setHeader("refresh","2;URL=visitor_reg.jsp") ;
+					out.println("两秒后自动跳转到游客注册界面！！！");
+				}
+			}	
 		}
 		out.flush();
 		out.close();

@@ -36,7 +36,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	
 			您还未登陆，请先登陆！！！<br>
 			两秒后自动跳转到登陆窗口！！！<br>
-			如果没有跳转，请按<a href="root_login.jsp">这里</a>！！！<br>
+			如果没有跳转，请按<a href="index.jsp">这里</a>！！！<br>
 	<%	}
 	else{
 			List all = null ;

@@ -30,7 +30,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		<%
 		if(request.getSession().getAttribute("userid")==null){		
 			// 用户未登陆，提示用户登陆，并跳转
-			response.setHeader("refresh","2;URL=login.jsp") ;
+			response.setHeader("refresh","2;URL=index.jsp") ;
 		%>
 			您还未登陆，请先登陆！！！<br>
 			两秒后自动跳转到登陆窗口！！！<br>
@@ -65,7 +65,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<td align="center" colspan="2"><h3><%=title%></h3></td>
 		</tr>
 		<tr>
-			<td align="center" colspan="2"><textarea style="width: 550px; height: 300px"><%=log_details %></textarea></td>
+			<td align="center" colspan="2"><textarea style="width: 550px; height: 300px" readonly><%=log_details %></textarea></td>
 		</tr>
 		<tr>
 			<td align="center" colspan="2"><h4>评论列表</h4></td>
